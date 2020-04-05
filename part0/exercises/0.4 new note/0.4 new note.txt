@@ -1,0 +1,46 @@
+title 0.4 new note
+
+participant Browser
+participant Server
+
+Browser->Server: GET notes.html
+Server-->Browser:notes.html
+
+Browser->Server: GET main.js
+Server-->Browser: main.js
+
+Browser->Server: GET main.css
+Server-->Browser: main.css
+
+note over Browser
+execute js
+end note
+
+Browser->Server: GET data.json
+Server-->Browser: data.json
+
+Browser->Server: GET facivon.ico
+note over Server
+favicon.ico not found (404)
+end note
+
+Browser->Server: POST new_note
+Server-->Browser:notes.html
+
+Browser->Server: GET main.js
+Server-->Browser: main.js
+
+Browser->Server: GET main.css
+Server-->Browser: main.css
+
+note over Browser
+execute js
+end note
+
+Browser->Server: GET data.json
+Server-->Browser: data.json
+
+Browser->Server: GET facivon.ico
+note over Server
+favicon.ico not found (404)
+end note

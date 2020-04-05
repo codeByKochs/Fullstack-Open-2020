@@ -1,0 +1,27 @@
+title 0.5 single page app
+
+participant Browser
+participant Server
+
+Browser->Server: GET spa.html
+Server-->Browser:spa.html
+
+Browser->Server: GET spa.js
+Server-->Browser: spa.js
+
+Browser->Server: GET main.css
+Server-->Browser: main.css
+
+note over Browser
+execute js
+end note
+
+Browser->Server: GET data.json
+Server-->Browser: data.json
+
+Browser->Server: GET facivon.ico
+note over Server
+favicon.ico not found (404)
+end note
+
+Browser->Server: POST new_note_spa.json
