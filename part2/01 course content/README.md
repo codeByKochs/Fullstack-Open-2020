@@ -1,3 +1,7 @@
-# courseinfo
+# 01 course content
 
-a simple webpage displaying info about the contents of this course
+A website showing contents of this course.
+
+implementeted concepts:
+    - functional programming (mapping)
+    - refractoring modules

@@ -1,3 +1,3 @@
-# Unicafe
+# 02 unicafe
 
-a simple webapp for giving feedback to a unicafe and calculating statistics
+a webpage giving feedback to a unicafe and calculating its statistics

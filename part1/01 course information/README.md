@@ -1,3 +1,3 @@
-# courseinfo
+# 01 courseinfo
 
-a simple webpage displaying info about the contents of this course
+a webpage displaying info about the contents of this course
