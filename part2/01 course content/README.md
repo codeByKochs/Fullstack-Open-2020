@@ -3,5 +3,5 @@
 A website showing contents of this course.
 
 implementeted concepts:
-    * functional programming (mapping)
-    * refractoring modules
+* functional programming (mapping)
+* refractoring modules
