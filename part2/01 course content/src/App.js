@@ -4,8 +4,8 @@ import Course from './components/Course'
 // dipslay multiple courses
 const Courses = ({courses}) => {
     return(
-      <div>
-      {courses.map(course => <Course course={course}/>)}
+      <div className='courses'>
+      {courses.map(course => <Course course={course} key={course.id} />)}
       </div>
     )
   }

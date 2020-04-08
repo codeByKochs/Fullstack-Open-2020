@@ -3,16 +3,12 @@ import React from 'react'
 // displays the given course
 const Course = ({course}) => {
     let name = course.name
+    let key = course.id
     
     return (
-      <div>
-        <div>
+      <div className='course' key={key}>
           <Header title={name} />
-        </div>
-        <div>
           <Content parts={course.parts} />
-          <Total parts={course.parts} />
-        </div>
       </div>
     )
   }
@@ -21,25 +17,24 @@ const Course = ({course}) => {
 const Header = ({title}) => <h1>{title}</h1>
 
 // displays a given part as paragraph
-const Part = ({part, exercises, key}) => <p key={key}>{part} {exercises}</p>
+const Part = ({part}) => <p>{part.name} {part.exercises}</p>
 
 // displays the sum of exercises in all parts
 const Total = ({parts}) => {
-  
 var sum = parts.reduce((sum, part) => {
     sum += part.exercises
     return sum
 }, 0)
-
 return <p><b>total of {sum} exercises</b></p>
 }
 
 // displays the content of a parts array
 const Content = ({parts}) => {
     return (
-      <div>
-        {parts.map(part => <Part part={part.name} exercises={part.exercises} key={part.key} />)}
-      </div>
+      <div className='content'>
+        {parts.map(part => <Part part={part} key={part.id} />)}
+        <Total parts={parts} />
+      </div>    
     )
 }
 
