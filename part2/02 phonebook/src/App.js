@@ -1,11 +1,12 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Phonebook from './components/phonebook/Phonebook'
 import FilterForm from './components/FilterForm'
 import AddForm from './components/AddForm'
+import axios from 'axios'
 
 const App = () => {
   // the saved persons in the phonebook
-  const [ persons, setPersons] = useState([])
+  const [ persons, setPersons] = useState([]) //TODO add effect hook here?
   // new Name, which will be added to the phonebook
   const [ newName, setNewName ] = useState('')
   // new phonenumber, which will be added to the phonebook
@@ -13,11 +14,17 @@ const App = () => {
   // filters entrys
   const [ nameFilter, setNameFilter] = useState('')
 
-  //list of dummy entries for testing purposes
-  // [{ name: 'Arto Hellas', number: '040-123456', id: 1},
-  // { name: 'Ada Lovelace', number: '39-44-5323523', id: 2},
-  // { name: 'Dan Abramov', number: '12-43-234345', id: 3},
-  // { name: 'Mary Poppendieck', number: '39-23-6423122', id: 4},]
+  // imports persons from server
+  const importPersons = () => {
+    axios
+      .get('http://localhost:3001/persons')
+      .then(response => {
+        console.log('promise fullfilled');
+        setPersons(response.data)
+      })
+  }
+  useEffect(importPersons, [])
+
 
  // handles changes in the name input field
  const handleNameChange = (event) => {
@@ -36,8 +43,6 @@ const handleFilterChange = (event) => {
   console.log(event.target.value)
   setNameFilter(event.target.value)
   }
-
-
 
   // adds a person to the persons array
   const addPerson = (event) => {
