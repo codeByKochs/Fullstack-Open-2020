@@ -1,0 +1,1 @@
+// displays search results as list of countries
