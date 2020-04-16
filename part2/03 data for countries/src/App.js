@@ -6,17 +6,13 @@ import SearchForm from './components/SearchForm'
 
 const App = () => {
 
-    const [searchString, setSearchString ] = useState('')
+    const [filter, setFilter ] = useState('')
     const [countries, setCountries] = useState([])
-    const [countriesToShow, setCountriesToShow] = useState([])
 
     // handles changes in the search input
     const handleSearchStringChange = (event) =>{
-        console.log("event target value", event.target.value);
-        setSearchString(event.target.value)
-        console.log("searchString ", searchString)
-        setCountriesToShow(countries.filter(country => country.name.toUpperCase().includes(searchString.toUpperCase())))
-        //TODO hier noch einen Rerender forcen
+        event.preventDefault()
+        setFilter(event.target.value)
     }
 
     // downloads country array via REST api
@@ -31,8 +27,8 @@ const App = () => {
 
     return(
         <div>
-            <SearchForm searchString={searchString} handleSearchStringChange={handleSearchStringChange} />
-            <SearchResultDisplay countries={countriesToShow} />
+            <SearchForm searchString={filter} handleSearchStringChange={handleSearchStringChange} />
+            <SearchResultDisplay countries={countries} filter={filter} setFilter={setFilter}/>
         </div>
     )
   }

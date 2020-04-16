@@ -1,45 +1,33 @@
-// displays search results
-
-// multiple results → 
-//      more than 10 results → message
-//      else display as list
-// single result → display as SingleCountryDisplay
-
 import React from 'react'
 import SingleCountryDisplay from './SingleCountryDisplay'
 
-const SearchResultDisplay = ({countries}) => {
+const SearchResultDisplay = ({countries, filter, setFilter}) => {
 
-    console.log("filtered countries", countries);
+    // applying filter to countries
+    countries = countries.filter(country => country.name.toUpperCase().includes(filter.toUpperCase()))
 
-    if(countries.length === 0){
-        return(
-            <div>
-                <p>No Country matching set filters</p>
-            </div>
-        )
+    switch (true){
+        case countries.length === 0:{
+            return <p>No Country matching set filters</p>
+        }
+
+        case countries.length > 10:{
+            return <p>Too many matches, specify another filter</p>
+        }
+
+        case countries.length === 1:{
+            return <SingleCountryDisplay country={countries[0]}/>
+        }
+
+        case countries.length>1 && countries.length<10:{
+            return countries.map(country => 
+                <p key={country.alpha2Code}>{country.name}<button onClick={() => setFilter(country.name)}>show</button></p>
+                )
+        }
+
+        default:
+            return null
     }
-
-    if (countries.length > 10) {
-        return(
-            <div>
-                <p>Too many matches, specify another filter</p>
-            </div>
-        )
-    }
-
-    if (countries.length === 1){
-        return(
-            <SingleCountryDisplay country={countries[0]}/>
-        )
-    }
-
-
-    return(
-        <div>
-            {countries.map(country => <p key={country.alpha2Code}>{country.name}</p>)}
-        </div>
-    )
 }
 
 export default SearchResultDisplay
