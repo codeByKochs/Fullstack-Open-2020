@@ -39,7 +39,7 @@ const WeatherDisplay = ({cityName}) => {
         )
     }
     else {
-        return null
+        return <div>Weather data could not be loaded</div>
     }
 
 }
