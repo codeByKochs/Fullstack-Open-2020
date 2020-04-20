@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import Phonebook from './components/phonebook/Phonebook'
+import PhonebookDisplay from './components/phoneBookDisplay/PhonebookDisplay'
 import FilterForm from './components/FilterForm'
 import AddForm from './components/AddForm'
-import axios from 'axios'
+import phonebookService from './services/phonebookService'
 
 const App = () => {
   // the saved persons in the phonebook
@@ -16,12 +16,14 @@ const App = () => {
 
   // imports persons from server
   const importPersons = () => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        console.log('promise fullfilled');
-        setPersons(response.data)
+    phonebookService
+      .getAll()
+      .then(persons => {
+        setPersons(persons)
       })
+      // .catch(
+      //   console.log("an error occured loading phonebook data from server")
+      // )
   }
   useEffect(importPersons, [])
 
@@ -47,24 +49,42 @@ const handleFilterChange = (event) => {
   // adds a person to the persons array
   const addPerson = (event) => {
     event.preventDefault()
-    console.log('add button clicked', event.target)
     const newPerson = {
       name: newName,
       number: newNumber,
-      id: persons.length + 1,
+      id: newName,
     }
     if (newPerson.name === ''){
       alert('name field is empty')
     }
     // checks if the new persons name is already in the phonebook
-    if (persons.some(person => person.name === newPerson.name)){
+    else if (persons.some(person => person.name === newPerson.name)){
       alert(`${newPerson.name} is already added to the phonebook`)
     }
     else{
-      setPersons(persons.concat(newPerson))
-      setNewName('')
-      setNewNumber('')
+      phonebookService
+        .create(newPerson)
+        .then(returnedPerson => {
+          console.log(returnedPerson)
+          setPersons(persons.concat(returnedPerson))
+          setNewName('')
+          setNewNumber('')
+          console.log(persons);
+          
+        })
+        // .catch(
+        //   console.log("an error occured sending data to the server")
+        // )
     }
+  }
+
+  const deleteEntry = (id) => {
+    console.log("deleting entry with id: ", id)
+    phonebookService.erase(id)
+
+    setPersons(persons.filter(
+      person => person.id !== id
+      ))
   }
 
   return (
@@ -77,7 +97,7 @@ const handleFilterChange = (event) => {
       </div>
       <div>
         <h2>Numbers</h2>
-        <Phonebook personList={persons} nameFilter={nameFilter} />
+        <PhonebookDisplay personList={persons} nameFilter={nameFilter} deleteEntry={deleteEntry} />
       </div>
     </div>
   )
