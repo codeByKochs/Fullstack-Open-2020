@@ -46,7 +46,7 @@ const handleFilterChange = (event) => {
   setNameFilter(event.target.value)
   }
 
-  // adds a person to the persons array
+  // adds a person to the phonebook or updates the phonenumber associated with that name
   const addPerson = (event) => {
     event.preventDefault()
     const newPerson = {
@@ -64,16 +64,18 @@ const handleFilterChange = (event) => {
       if(persons.some(person => person.number === newPerson.number))
       {
         alert(`${newPerson.name} is already added to the phonebook`)
-    }
-      // a new number can be saved for the specified person
+      }
+    // a new number can be saved for the specified person
     else
     {
-      window.confirm(`${newPerson.name} is already added to the phonebook, replace the old number with a new one?`)
-        
-      phonebookService
-        .update(newPerson)
-        .then(response => 
-          setPersons(persons.map(person => person.id !== newPerson.id ? person : response)))
+      if (window.confirm(`${newPerson.name} is already added to the phonebook, replace the old number with a new one?`))
+      {
+        const toBeUpdated = persons.find(person => person.name === newPerson.name)
+
+        phonebookService
+        .update(newPerson, toBeUpdated.id)
+        .then(response => setPersons(persons.map(person => person.id !== toBeUpdated.id ? person : response)))
+      }
     }
   }
 
@@ -99,13 +101,14 @@ const handleFilterChange = (event) => {
 
     const toBeDeleted = persons.find(person => person.id === id)
 
-    window.confirm(`Delete ${toBeDeleted.name}?`)
+    if (window.confirm(`Delete ${toBeDeleted.name}?`))
+    {
+      phonebookService.erase(id)
 
-    phonebookService.erase(id)
-
-    setPersons(persons.filter(
-      person => person.id !== id
-      ))
+      setPersons(persons.filter(
+        person => person.id !== id
+        ))
+    }
   }
 
   return (
