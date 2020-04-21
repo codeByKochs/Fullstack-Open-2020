@@ -81,7 +81,7 @@ const handleFilterChange = (event) => {
       if(persons.some(person => person.number === newPerson.number))
       {
         alert(`${newPerson.name} is already added to the phonebook`)
-        displayMessage("errorMessage", "Person could not be added")
+        displayMessage("errorMessage", "Person is already added to the phonebook")
       }
     // a new number can be saved for the specified person
     else
@@ -92,9 +92,19 @@ const handleFilterChange = (event) => {
 
         phonebookService
         .update(newPerson, toBeUpdated.id)
-        .then(response => setPersons(persons.map(person => person.id !== toBeUpdated.id ? person : response)))
-
-        displayMessage("successMessage", `phone number updated for ${newPerson.name}`)
+        .then(response =>
+          {
+          setPersons(persons.map(person => person.id !== toBeUpdated.id ? person : response))
+          displayMessage("successMessage", `phone number updated for ${newPerson.name}`)
+          } 
+        )
+        .catch(error => 
+          {
+            console.log("failed to update person")
+            displayMessage("errorMessage", `Information of ${newPerson.name} has already been removed from server`)
+            setPersons(persons.filter(person => person.name !== newPerson.name))
+          }
+        )
       }
     }
   }
@@ -115,7 +125,8 @@ const handleFilterChange = (event) => {
           {
             console.log("an error occured sending data to the server")
             displayMessage("errorMessage", `${newPerson.name} could not be added`)
-          })
+          }
+        )
     }
   }
 
@@ -126,14 +137,17 @@ const handleFilterChange = (event) => {
     if (window.confirm(`Delete ${toBeDeleted.name}?`))
     {
       phonebookService.erase(id)
+      .then(response => {
+        setPersons(persons.filter(person => person.name !== toBeDeleted.name))
+        displayMessage("successMessage", `${toBeDeleted.name} has been removed`)
+    })
 
-      setPersons(persons.filter(
-        person => person.id !== id
-        ))
-      displayMessage("successMessage", `${toBeDeleted.name} has been removed`)
+      .catch(error => {
+        setPersons(persons.filter(person => person.name !== toBeDeleted.name))
+        displayMessage("errorMessage", `${toBeDeleted.name} has already been removed from server`)
+      })
     }
   }
-
   return (
     <div>
       <div>
