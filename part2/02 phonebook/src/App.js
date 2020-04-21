@@ -7,9 +7,9 @@ import phonebookService from './services/phonebookService'
 const App = () => {
   // the saved persons in the phonebook
   const [ persons, setPersons] = useState([]) //TODO add effect hook here?
-  // new Name, which will be added to the phonebook
+  // new Name for phonebook entry
   const [ newName, setNewName ] = useState('')
-  // new phonenumber, which will be added to the phonebook
+  // new phonenumber for phonebook entry
   const [ newNumber, setNewNumber] = useState('')
   // filters entrys
   const [ nameFilter, setNameFilter] = useState('')
@@ -52,15 +52,32 @@ const handleFilterChange = (event) => {
     const newPerson = {
       name: newName,
       number: newNumber,
-      id: newName,
     }
+    
     if (newPerson.name === ''){
       alert('name field is empty')
     }
-    // checks if the new persons name is already in the phonebook
-    else if (persons.some(person => person.name === newPerson.name)){
-      alert(`${newPerson.name} is already added to the phonebook`)
+    // checks if person with same name is already in the phonebook
+    else if (persons.some(person => person.name === newPerson.name))
+    {
+      // if the same number is in the phonebook for this person it is not added to the phonebook
+      if(persons.some(person => person.number === newPerson.number))
+      {
+        alert(`${newPerson.name} is already added to the phonebook`)
     }
+      // a new number can be saved for the specified person
+    else
+    {
+      window.confirm(`${newPerson.name} is already added to the phonebook, replace the old number with a new one?`)
+        
+      phonebookService
+        .update(newPerson)
+        .then(response => 
+          setPersons(persons.map(person => person.id !== newPerson.id ? person : response)))
+    }
+  }
+
+    // creates a new phonebook entry
     else{
       phonebookService
         .create(newPerson)
@@ -79,7 +96,11 @@ const handleFilterChange = (event) => {
   }
 
   const deleteEntry = (id) => {
-    console.log("deleting entry with id: ", id)
+
+    const toBeDeleted = persons.find(person => person.id === id)
+
+    window.confirm(`Delete ${toBeDeleted.name}?`)
+
     phonebookService.erase(id)
 
     setPersons(persons.filter(
