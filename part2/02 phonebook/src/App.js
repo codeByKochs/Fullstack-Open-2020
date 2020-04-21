@@ -3,6 +3,8 @@ import PhonebookDisplay from './components/phoneBookDisplay/PhonebookDisplay'
 import FilterForm from './components/FilterForm'
 import AddForm from './components/AddForm'
 import phonebookService from './services/phonebookService'
+import Notification from './components/Notification'
+import './index.css'
 
 const App = () => {
   // the saved persons in the phonebook
@@ -13,6 +15,10 @@ const App = () => {
   const [ newNumber, setNewNumber] = useState('')
   // filters entrys
   const [ nameFilter, setNameFilter] = useState('')
+  // user notification
+  const [ message, setMessage] = useState(null)
+  // type of notification
+  const [ messageType, setMessageType] = useState('')
 
   // imports persons from server
   const importPersons = () => {
@@ -20,10 +26,12 @@ const App = () => {
       .getAll()
       .then(persons => {
         setPersons(persons)
+        displayMessage("successMessage", "Data loaded from server")
       })
-      // .catch(
-      //   console.log("an error occured loading phonebook data from server")
-      // )
+      .catch(error => {
+        console.log("an error occured loading phonebook data from server")
+        displayMessage("errorMessage", "Data could not be loaded from server")
+      })
   }
   useEffect(importPersons, [])
 
@@ -46,6 +54,14 @@ const handleFilterChange = (event) => {
   setNameFilter(event.target.value)
   }
 
+  const displayMessage = (messageType, message) => {
+    setMessage(message)
+    setMessageType(messageType)
+    setTimeout(() => {
+      setMessage(null)
+    }, 5000)
+  }
+
   // adds a person to the phonebook or updates the phonenumber associated with that name
   const addPerson = (event) => {
     event.preventDefault()
@@ -56,6 +72,7 @@ const handleFilterChange = (event) => {
     
     if (newPerson.name === ''){
       alert('name field is empty')
+      displayMessage("errorMessage", "Person could not be added")
     }
     // checks if person with same name is already in the phonebook
     else if (persons.some(person => person.name === newPerson.name))
@@ -64,6 +81,7 @@ const handleFilterChange = (event) => {
       if(persons.some(person => person.number === newPerson.number))
       {
         alert(`${newPerson.name} is already added to the phonebook`)
+        displayMessage("errorMessage", "Person could not be added")
       }
     // a new number can be saved for the specified person
     else
@@ -75,6 +93,8 @@ const handleFilterChange = (event) => {
         phonebookService
         .update(newPerson, toBeUpdated.id)
         .then(response => setPersons(persons.map(person => person.id !== toBeUpdated.id ? person : response)))
+
+        displayMessage("successMessage", `phone number updated for ${newPerson.name}`)
       }
     }
   }
@@ -89,11 +109,13 @@ const handleFilterChange = (event) => {
           setNewName('')
           setNewNumber('')
           console.log(persons);
-          
+          displayMessage("successMessage", `Added ${newPerson.name}`)
         })
-        // .catch(
-        //   console.log("an error occured sending data to the server")
-        // )
+        .catch( error =>
+          {
+            console.log("an error occured sending data to the server")
+            displayMessage("errorMessage", `${newPerson.name} could not be added`)
+          })
     }
   }
 
@@ -108,6 +130,7 @@ const handleFilterChange = (event) => {
       setPersons(persons.filter(
         person => person.id !== id
         ))
+      displayMessage("successMessage", `${toBeDeleted.name} has been removed`)
     }
   }
 
@@ -115,6 +138,7 @@ const handleFilterChange = (event) => {
     <div>
       <div>
         <h1>Phonebook</h1>
+        <Notification message={message} messageType={messageType}></Notification>
         <FilterForm nameFilter={nameFilter} handleFilterChange={handleFilterChange} />
         <h2>add a new entry</h2>
         <AddForm addPerson={addPerson} newName={newName} handleNameChange={handleNameChange} newNumber={newNumber} handleNumberChange={handleNumberChange} />
