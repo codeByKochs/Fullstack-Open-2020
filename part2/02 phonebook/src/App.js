@@ -101,8 +101,7 @@ const handleFilterChange = (event) => {
         .catch(error => 
           {
             console.log("failed to update person")
-            displayMessage("errorMessage", error.response.data)
-            setPersons(persons.filter(person => person.name !== newPerson.name))
+            displayMessage("errorMessage", error.response.data.error)
           }
         )
       }
@@ -124,7 +123,7 @@ const handleFilterChange = (event) => {
         .catch( error =>
           {
             console.log("an error occured sending data to the server")
-            displayMessage("errorMessage", error.response.data)
+            displayMessage("errorMessage", error.response.data.error)
           }
         )
     }
@@ -143,7 +142,7 @@ const handleFilterChange = (event) => {
     })
       .catch(error => {
         setPersons(persons.filter(person => person.name !== toBeDeleted.name))
-        displayMessage("errorMessage", error.response.data)
+        displayMessage("errorMessage", error.response.data.error)
       })
     }
   }
