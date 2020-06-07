@@ -101,7 +101,7 @@ const handleFilterChange = (event) => {
         .catch(error => 
           {
             console.log("failed to update person")
-            displayMessage("errorMessage", `Information of ${newPerson.name} has already been removed from server`)
+            displayMessage("errorMessage", error.response.data)
             setPersons(persons.filter(person => person.name !== newPerson.name))
           }
         )
@@ -124,7 +124,7 @@ const handleFilterChange = (event) => {
         .catch( error =>
           {
             console.log("an error occured sending data to the server")
-            displayMessage("errorMessage", `${newPerson.name} could not be added`)
+            displayMessage("errorMessage", error.response.data)
           }
         )
     }
@@ -141,10 +141,9 @@ const handleFilterChange = (event) => {
         setPersons(persons.filter(person => person.name !== toBeDeleted.name))
         displayMessage("successMessage", `${toBeDeleted.name} has been removed`)
     })
-
       .catch(error => {
         setPersons(persons.filter(person => person.name !== toBeDeleted.name))
-        displayMessage("errorMessage", `${toBeDeleted.name} has already been removed from server`)
+        displayMessage("errorMessage", error.response.data)
       })
     }
   }
