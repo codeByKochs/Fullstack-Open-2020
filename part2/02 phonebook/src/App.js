@@ -70,10 +70,11 @@ const handleFilterChange = (event) => {
       number: newNumber,
     }
     
-    if (newPerson.name === ''){
-      alert('name field is empty')
+    if (newPerson.name === '' || newPerson.number === ''){
+      alert('name field or number field is empty')
       displayMessage("errorMessage", "Person could not be added")
     }
+
     // checks if person with same name is already in the phonebook
     else if (persons.some(person => person.name === newPerson.name))
     {
