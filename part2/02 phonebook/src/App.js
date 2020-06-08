@@ -79,7 +79,7 @@ const handleFilterChange = (event) => {
     else if (persons.some(person => person.name === newPerson.name))
     {
       // if the same number is in the phonebook for this person it is not added to the phonebook
-      if(persons.some(person => person.number === newPerson.number))
+      if(persons.some(person => person.name === newPerson.name && person.number === newPerson.number))
       {
         alert(`${newPerson.name} is already added to the phonebook`)
         displayMessage("errorMessage", "Person is already added to the phonebook")
