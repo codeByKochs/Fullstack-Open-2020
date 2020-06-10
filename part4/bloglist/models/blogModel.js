@@ -1,22 +1,22 @@
 const mongoose = require('mongoose');
 
 const blogSchema = new mongoose.Schema({
-    author:{
+    author: {
         type: String,
-        minlength: 3
+        minlength: 3,
     },
-    title:{
+    title: {
         type: String,
-        minlength: 5
+        minlength: 5,
     },
-    url:{
+    url: {
         type: String,
         required: true,
     },
-    votes:{
+    votes: {
         type: Number,
         min: 0,
-    }
-})
+    },
+});
 
 module.exports = mongoose.model('Blog', blogSchema)
