@@ -1,6 +1,11 @@
 const blogRouter = require('express').Router();
 const Blog = require('../models/blogModel');
 
+// greeting
+blogRouter.get('/greeting', (request, response) => {
+    response.send({ message: 'Hello World' });
+});
+
 // handles request of blog database
 blogRouter.get('/', (request, response) => {
     Blog.find({})
@@ -48,14 +53,14 @@ blogRouter.delete('/:id', (request, response, next) => {
 });
 
 blogRouter.put('/:id', (request, response, next) => {
-    const blog = new Blog({
+    const blog = {
         author: request.body.author,
         title: request.body.title,
         url: request.body.url,
         votes: request.body.votes,
-    });
+    };
 
-    Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
+    Blog.findOneAndUpdate({ _id: request.params.id }, blog, { new: true, context: 'query' })
         .then((updatedBlog) => {
             response.json(updatedBlog.toJSON());
         })

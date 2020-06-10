@@ -1,5 +1,8 @@
 const mongoose = require('mongoose');
 
+mongoose.set('useFindAndModify', false);
+mongoose.set('useCreateIndex', true);
+
 const blogSchema = new mongoose.Schema({
     author: {
         type: String,
@@ -19,4 +22,4 @@ const blogSchema = new mongoose.Schema({
     },
 });
 
-module.exports = mongoose.model('Blog', blogSchema)
+module.exports = mongoose.model('Blog', blogSchema);
