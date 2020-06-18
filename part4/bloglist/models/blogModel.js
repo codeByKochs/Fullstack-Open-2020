@@ -11,6 +11,7 @@ const blogSchema = new mongoose.Schema({
     title: {
         type: String,
         minlength: 5,
+        required: true,
     },
     url: {
         type: String,
@@ -19,7 +20,21 @@ const blogSchema = new mongoose.Schema({
     votes: {
         type: Number,
         min: 0,
+        default: 0,
     },
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    }
 });
+
+
+blogSchema.set('toJSON', {
+    transform: (document, returnedObject) => {
+        returnedObject.id = returnedObject._id
+        delete returnedObject._id
+        delete returnedObject.__v
+    }
+})
 
 module.exports = mongoose.model('Blog', blogSchema);
