@@ -17,6 +17,10 @@ const blogSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    },
     votes: {
         type: Number,
         min: 0,

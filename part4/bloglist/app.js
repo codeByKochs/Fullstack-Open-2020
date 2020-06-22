@@ -4,7 +4,6 @@ const express = require('express');
 require('express-async-errors')
 
 const app = express();
-
 const cors = require('cors');
 const blogRouter = require('./controllers/blogController');
 const userRouter = require('./controllers/userController');
@@ -29,6 +28,7 @@ app.use(express.static('build'));
 app.use(express.json());
 app.use(middleware.requestLogger);
 
+app.use(middleware.tokenExtractor)
 app.use('/api/blogs/', blogRouter);
 app.use('/api/users/', userRouter);
 app.use('/api/login', loginRouter);
