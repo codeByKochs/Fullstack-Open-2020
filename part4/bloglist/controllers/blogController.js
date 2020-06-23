@@ -23,11 +23,9 @@ blogRouter.get('/:id', async (request, response) => {
 blogRouter.post('/', async (request, response) => {
 
     const decodedToken = jwt.verify(request.token, process.env.SECRET)
-
     if (!request.token || !decodedToken.id) {
         return response.status(401).json({error: 'token missing or invalid'})
     }
-
     const user = await User.findById(decodedToken.id)
 
     const blog = new Blog({
@@ -47,8 +45,21 @@ blogRouter.post('/', async (request, response) => {
 
 // handles deletion of blog
 blogRouter.delete('/:id', async (request, response) => {
-    await Blog.findOneAndRemove(request.params.id)
-    response.status(204).end();
+
+// only creator of the blog is allowed to remove it
+    const decodedToken = jwt.verify(request.token, process.env.SECRET)
+    if (!request.token || !decodedToken.id) {
+        return response.status(401).json({error: 'token missing or invalid'})
+    }
+    const user = await User.findById(decodedToken.id)
+
+    const toBeDeleted = await Blog.findById(request.params.id)
+
+    if (user._id.toString() === toBeDeleted.user.id.toString()){
+        return response.status(401).json({error: 'token missing or invalid'})
+    } else {
+        response.status(204).json({error: 'invalid rights to remove blog'});
+    }
 });
 
 blogRouter.put('/:id', async (request, response) => {

@@ -152,6 +152,7 @@ describe('when there is initially some blogs saved', () => {
 
     test('fails with status code 400, if data is invalid', async () => {
 
+
       const loginResponse = await api.post('/api/login').send({userName: "root", password: "root"})
       const token = `bearer ${loginResponse.body.token}`
 
@@ -205,12 +206,41 @@ describe('when there is initially some blogs saved', () => {
   });
 
   describe('deletion of blog', () => {
-    test('succeeds with status code 204, if id is valid', async () => {
+    beforeEach(async () => {
+      await User.deleteMany({})
+  
+      const passwordHash = await bcrypt.hash('root', 10)
+      const user = new User({userName: 'root', passwordHash})
+      await user.save()
+
+
+      await Blog.deleteMany({})
+      const loginResponse = await api.post('/api/login').send({userName: "root", password: "root"})
+      const token = `bearer ${loginResponse.body.token}`
+
+      const newBlog = {
+        author: "added author",
+        title: "added title",
+        url: "added url",
+        votes: 0,
+      }
+      
+      await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .set({Authorization: token})
+    });
+
+    test('succeeds with status code 204, if user credentials are submitted in header', async () => {
+      const loginResponse = await api.post('/api/login').send({userName: "root", password: "root"})
+      const token = `bearer ${loginResponse.body.token}`
+
       const blogsAtStart = await helper.blogsInDB()
       const blogToBeDeleted = blogsAtStart[0]
     
       await api
         .delete(`/api/blogs/${blogToBeDeleted.id}`)
+        .set({Authorization: token})
         .expect(204)
     
       const blogsAtEnd = await helper.blogsInDB()
@@ -218,6 +248,37 @@ describe('when there is initially some blogs saved', () => {
     
       expect(blogsAtEnd).not.toContain(blogToBeDeleted)
     });
+
+    test('fails if incorrect blog-id is used', async () => {
+      const loginResponse = await api.post('/api/login').send({userName: "root", password: "root"})
+      const token = `bearer ${loginResponse.body.token}`
+
+      const blogsAtStart = await helper.blogsInDB()
+    
+      await api
+        .delete(`/api/blogs/123456`)
+        .set({Authorization: token})
+        .expect(400)
+    
+      const blogsAtEnd = await helper.blogsInDB()
+      expect(blogsAtEnd).toHaveLength(blogsAtStart.length)
+    });
+
+    test('fails if incorrect credentials are submitted', async () => {
+      const blogsAtStart = await helper.blogsInDB()
+
+      const blogToBeDeleted = blogsAtStart[0]
+
+      const invalidToken = "bearer 123456"
+    
+      await api
+        .delete(`/api/blogs/${blogToBeDeleted.id}`)
+        .set({Authorization: invalidToken})
+        .expect(401)
+    
+      const blogsAtEnd = await helper.blogsInDB()
+      expect(blogsAtEnd).toHaveLength(blogsAtStart.length)
+    })
   });
 
   describe('when there is initially one user in db', () => {
