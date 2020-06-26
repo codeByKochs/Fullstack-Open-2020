@@ -1,5 +1,4 @@
 import axios from 'axios'
-import Blogdisplay from '../components/BlogDisplay'
 const baseUrl = '/api/blogs'
 
 let token = null
@@ -14,7 +13,7 @@ const getAll = async () => {
 }
 
 const create = async (newBlog) => {
-  const config = {headers: {Authorization: token}}
+  const config = { headers: { Authorization: token } }
 
   const response = await axios.post(baseUrl, newBlog, config)
   return response.data
@@ -26,12 +25,8 @@ const update = async (id, newBlog) => {
 }
 
 const remove = async (id) => {
-  const config = {headers: {Authorization: token}}
-
-  const response = await axios.delete(`${baseUrl}/${id}`, config)
-  console.log('response: ', response);
-  
-  return response.data
+  const config = { headers: { Authorization: token } }
+  await axios.delete(`${baseUrl}/${id}`, config)
 }
 
 export default { setToken, getAll, create, remove, update }

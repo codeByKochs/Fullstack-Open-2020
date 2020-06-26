@@ -10,7 +10,7 @@ const blogStyle = {
 
 const Blog = ({ blog, updateBlog, deleteBlog }) => {
 
-  const [viewDetails, setViewDetails] = useState(false)  
+  const [viewDetails, setViewDetails] = useState(false)
 
   const changeVisibility = () => {
     setViewDetails(!viewDetails)
@@ -18,25 +18,27 @@ const Blog = ({ blog, updateBlog, deleteBlog }) => {
 
   const upvote = () => {
     blog.votes = blog.votes + 1
-    console.log(blog);
-    
     updateBlog(blog)
   }
 
   const remove = () => {
-    deleteBlog(blog.id)
+    if(window.confirm(`Remove blog ${blog.title} by ${blog.author}`)){
+      deleteBlog(blog.id)
+    }
   }
 
   const minimizedView = () => <p>{blog.title} {blog.author} <button onClick={changeVisibility}>view</button></p>
-  
+
   const expandedView = () => {
+
+    const user = JSON.parse(window.localStorage.getItem('loggedBlogappUser'))
     return(
-      <div>
+      <div key={blog.id}>
         <p>{blog.title} {blog.author} <button onClick={changeVisibility}>hide</button></p>
         <p>{blog.url}</p>
         <p>likes {blog.votes} <button onClick={upvote}>like</button></p>
         <p>{blog.user.name}</p>
-        <button onClick={remove}>remove</button>
+        {user.name === blog.user.name ? <button onClick={remove}>remove</button> : null}
       </div>
     )
   }

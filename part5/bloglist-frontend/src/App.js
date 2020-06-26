@@ -15,12 +15,12 @@ const App = () => {
   const [message, setMessage] = useState(null)
   const [messageType, setMessageType] = useState('')
 
-  const blogFormRef = useRef();
+  const blogFormRef = useRef()
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
-    )  
+    )
   }, [])
 
   useEffect(() => {
@@ -41,25 +41,25 @@ const App = () => {
   }
 
   const handleLogin = async (event) => {
-    event.preventDefault();
+    event.preventDefault()
     try {
-      const user = await loginService.login({userName, password})
+      const user = await loginService.login({ userName, password })
 
       window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
       setUser(user)
       setUserName('')
       setPassword('')
-      
-      console.log(`logged in as ${user.name}`);
+
+      console.log(`logged in as ${user.name}`)
       displayMessage('successMessage', `logged in as ${userName}`)
-      
+
     } catch (exception) {
       displayMessage('errorMessage', 'wrong username or password')
     }
   }
 
   const handleLogout = (event) => {
-    event.preventDefault();
+    event.preventDefault()
     setUser(null)
     window.localStorage.clear()
     displayMessage('successMessage', 'logged out successfully')
@@ -68,8 +68,8 @@ const App = () => {
   const createBlog = async (newBlog) => {
     try {
       blogFormRef.current.toggleVisibility()
-      await blogService.create(newBlog)
-      setBlogs(blogs.concat(newBlog))
+      const response = await blogService.create(newBlog)
+      setBlogs(blogs.concat(response))
       displayMessage('successMessage', 'new blog created')
     }catch (error) {
       // TODO: show more detailed message
@@ -99,7 +99,7 @@ const App = () => {
   const loginForm = () => {
     return(
       <Togglable buttonLabel = 'login'>
-        <LoginForm 
+        <LoginForm
           userName={userName}
           setUserName={setUserName}
           password={password}
