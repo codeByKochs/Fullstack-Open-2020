@@ -1,48 +1,56 @@
-import React from 'react'
+import React , {useState} from 'react'
 
-const BlogForm = ({user, setNewBlog, handleBlogChange, handleBlogCreation}) => {
+const BlogForm = ({createBlog}) => {
 
-    const newBlog = {
-        title: "",
-        author: "",
-        url: ""
+    const [title, setTitle] = useState('')
+    const [author, setAuthor] = useState('')
+    const [url, setUrl] = useState('')
+
+    const addBlog = (event) => {
+        event.preventDefault();
+        createBlog(
+            {
+                title: title,
+                author: author,
+                url: url
+        })
+        setTitle('')
+        setAuthor('')
+        setUrl('')
     }
-
-    if (user !== null){
-        return(
-            <div>
-                <h2>create new</h2>
-                <form onSubmit={handleBlogCreation}>
-                    <div>
-                        title
-                        <input
-                            type="text"
-                            value={newBlog.title}
-                            onChange={() => {handleBlogChange(newBlog)}} 
-                        />
-                    </div>
-                    <div>
-                        author
-                        <input
-                            type="text"
-                            value={newBlog.author}
-                            onChange={() => {handleBlogChange(newBlog)}} 
-                        />
-                    </div>
-                    <div>
-                        url
-                        <input
-                            type="text"
-                            value={newBlog.url}
-                            onChange={() => {handleBlogChange(newBlog)}} 
-                        />
-                    </div>
-                    <button type="submit">create</button>
-                </form> 
-            </div>
-        )
-    }
-    return null;
+    
+    return(
+        <div>
+            <h1>create new</h1>
+            <form onSubmit={addBlog}>
+                <div>
+                    title
+                    <input
+                        type="text"
+                        name="title"
+                        onChange={({target}) => {setTitle(target.value)}}
+                    />
+                </div>
+                <div>
+                    author
+                    <input
+                        type="text"
+                        name="author"
+                        onChange={({target}) => {setAuthor(target.value)}}
+                    />
+                </div>
+                <div>
+                    url
+                    <input
+                        type="text"
+                        name="url"
+                        onChange={({target}) => {setUrl(target.value)}}
+                    />
+                </div>
+                <button type="submit">create</button>
+            </form> 
+        </div>
+    )
 }
 
 export default BlogForm

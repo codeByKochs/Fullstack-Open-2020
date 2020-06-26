@@ -52,13 +52,13 @@ blogRouter.delete('/:id', async (request, response) => {
         return response.status(401).json({error: 'token missing or invalid'})
     }
     const user = await User.findById(decodedToken.id)
-
     const toBeDeleted = await Blog.findById(request.params.id)
 
     if (user._id.toString() === toBeDeleted.user.id.toString()){
-        return response.status(401).json({error: 'token missing or invalid'})
+        return response.status(401).json({error: 'invalid rights to remove blog'})
     } else {
-        response.status(204).json({error: 'invalid rights to remove blog'});
+        await Blog.findByIdAndRemove(toBeDeleted)
+        response.status(204).end();
     }
 });
 

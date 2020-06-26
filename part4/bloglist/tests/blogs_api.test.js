@@ -7,7 +7,8 @@ const app = require('../app');
 const api = supertest(app);
 
 const User = require('../models/userModel');
-const Blog = require('../models/blogModel')
+const Blog = require('../models/blogModel');
+const { blogsInDB } = require('./test_helper');
 
 describe('connection to database', () => {
   test('is established in 50 sec', async () => {
@@ -232,10 +233,12 @@ describe('when there is initially some blogs saved', () => {
     });
 
     test('succeeds with status code 204, if user credentials are submitted in header', async () => {
+
+      const blogsAtStart = await blogsInDB();
+
       const loginResponse = await api.post('/api/login').send({userName: "root", password: "root"})
       const token = `bearer ${loginResponse.body.token}`
 
-      const blogsAtStart = await helper.blogsInDB()
       const blogToBeDeleted = blogsAtStart[0]
     
       await api
@@ -244,7 +247,7 @@ describe('when there is initially some blogs saved', () => {
         .expect(204)
     
       const blogsAtEnd = await helper.blogsInDB()
-      expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length - 1)
+      expect(blogsAtEnd).toHaveLength(blogsAtStart.length - 1)
     
       expect(blogsAtEnd).not.toContain(blogToBeDeleted)
     });
