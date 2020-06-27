@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 
 const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5
+  paddingTop: 10,
+  paddingLeft: 2,
+  border: 'solid',
+  borderWidth: 1,
+  marginBottom: 5
 }
 
 const Blog = ({ blog, updateBlog, deleteBlog }) => {
@@ -34,17 +34,17 @@ const Blog = ({ blog, updateBlog, deleteBlog }) => {
     const user = JSON.parse(window.localStorage.getItem('loggedBlogappUser'))
     return(
       <div key={blog.id}>
-        <p>{blog.title} {blog.author} <button onClick={changeVisibility}>hide</button></p>
+        <p>{blog.title} {blog.author} <button className="viewButton" onClick={changeVisibility}>hide</button></p>
         <p>{blog.url}</p>
         <p>likes {blog.votes} <button onClick={upvote}>like</button></p>
         <p>{blog.user.name}</p>
-        {user.name === blog.user.name ? <button onClick={remove}>remove</button> : null}
+        {user === null || user.name === blog.user.name ? <button className='likeButton'  onClick={remove}>remove</button> : null}
       </div>
     )
   }
 
   return (
-    <div key={blog.id} style={blogStyle}>
+    <div key={blog.id} style={blogStyle} className="Blog">
       {viewDetails ? expandedView() : minimizedView()}
     </div>
   )
