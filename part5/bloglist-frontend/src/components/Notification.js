@@ -29,9 +29,9 @@ const Notification = ({ message, messageType }) =>
 
   switch (messageType) {
   case 'errorMessage':
-    return <div className={messageType} style={errorMessageStyle}> {message}</div>
+    return <div id="message" className={messageType} style={errorMessageStyle}> {message}</div>
   case 'successMessage':
-    return <div className={messageType} style={successMessageStyle}> {message}</div>
+    return <div id="message" className={messageType} style={successMessageStyle}> {message}</div>
   default:
     return null
   }

@@ -16,12 +16,13 @@ const BlogForm = ({ createBlog }) => {
     setTitle('')
     setAuthor('')
     setUrl('')
+    document.getElementById('blogForm').reset()
   }
 
   return(
     <div>
       <h1>create new</h1>
-      <form onSubmit={addBlog}>
+      <form id="blogForm" onSubmit={addBlog}>
         <div>
                     title
           <input
@@ -49,7 +50,7 @@ const BlogForm = ({ createBlog }) => {
             onChange={({ target }) => {setUrl(target.value)}}
           />
         </div>
-        <button type="submit">create</button>
+        <button id="submitButton" type="submit">create</button>
       </form>
     </div>
   )

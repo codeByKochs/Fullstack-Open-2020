@@ -1,7 +1,7 @@
 import React from 'react'
 import Blog from './Blog'
 
-const Blogdisplay = ({blogs, updateBlog, deleteBlog}) => {
+const Blogdisplay = ({ blogs, updateBlog, deleteBlog }) => {
   const compare = (blogA, blogB) => {
     const votesA = blogA.votes
     const votesB = blogB.votes

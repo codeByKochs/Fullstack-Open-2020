@@ -27,24 +27,25 @@ const Blog = ({ blog, updateBlog, deleteBlog }) => {
     }
   }
 
-  const minimizedView = () => <p>{blog.title} {blog.author} <button onClick={changeVisibility}>view</button></p>
+  const minimizedView = () => <p>{blog.title} {blog.author} <button className="viewButton" onClick={changeVisibility}>view</button></p>
 
   const expandedView = () => {
 
     const user = JSON.parse(window.localStorage.getItem('loggedBlogappUser'))
+
     return(
       <div key={blog.id}>
-        <p>{blog.title} {blog.author} <button className="viewButton" onClick={changeVisibility}>hide</button></p>
+        <p>{blog.title} {blog.author} <button className="hideButton" onClick={changeVisibility}>hide</button></p>
         <p>{blog.url}</p>
-        <p>likes {blog.votes} <button onClick={upvote}>like</button></p>
+        <p>likes {blog.votes} <button className="likeButton" onClick={upvote}>like</button></p>
         <p>{blog.user.name}</p>
-        {user === null || user.name === blog.user.name ? <button className='likeButton'  onClick={remove}>remove</button> : null}
+        {user.name !== blog.user.name ? null: <button className='deleteButton' onClick={remove}>remove</button>}
       </div>
     )
   }
 
   return (
-    <div key={blog.id} style={blogStyle} className="Blog">
+    <div className="blog" key={blog.id} style={blogStyle}>
       {viewDetails ? expandedView() : minimizedView()}
     </div>
   )
