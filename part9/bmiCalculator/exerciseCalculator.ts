@@ -11,34 +11,34 @@ interface exerciseResult {
 
 function calculateExercises(exerciseHours: Array<number>, targetAverageHours: number) :exerciseResult {
 
-    const periodLength = exerciseHours.length
-    const averageTrainingTime = (exerciseHours.reduce((sum, dailyHours) => sum + dailyHours ))/periodLength
-    const trainingDays = exerciseHours.filter((dailyHours) => dailyHours > 0).length
+    const periodLength = exerciseHours.length;
+    const averageTrainingTime = (exerciseHours.reduce((sum, dailyHours) => sum + dailyHours ))/periodLength;
+    const trainingDays = exerciseHours.filter((dailyHours) => dailyHours > 0).length;
 
-    let isTargetReached = false
+    let isTargetReached = false;
     if (targetAverageHours <= averageTrainingTime){
-        isTargetReached = true
+        isTargetReached = true;
     }
 
-    let rating
-    let ratingDescription
+    let rating;
+    let ratingDescription;
 
     switch (true) {
         case (averageTrainingTime/(targetAverageHours/100) < 33):
-            rating = 1
-            ratingDescription = 'You can definetly do better'
+            rating = 1;
+            ratingDescription = 'You can definetly do better';
             break;
         case((averageTrainingTime/(targetAverageHours/100) >= 33 && averageTrainingTime/(targetAverageHours/100) <= 66)):
-            rating = 2
-            ratingDescription = 'Not too bad but could be better'
+            rating = 2;
+            ratingDescription = 'Not too bad but could be better';
             break;
         case(averageTrainingTime/(targetAverageHours/100) >= 66):
-            rating = 3
-            ratingDescription = 'Great job! Keep going!'
+            rating = 3;
+            ratingDescription = 'Great job! Keep going!';
             break;
         default:
-            rating = 0
-            ratingDescription = 'rating could not be calculated'
+            rating = 0;
+            ratingDescription = 'rating could not be calculated';
             break;
     }
 
@@ -50,22 +50,22 @@ function calculateExercises(exerciseHours: Array<number>, targetAverageHours: nu
         ratingDescription: ratingDescription,
         target: targetAverageHours,
         average: averageTrainingTime
-        }
+        };
 }
 
 
 try {
-    let target : number = parseInt(process.argv[2])
-    let numbers: number[] = []
-    let i : number = 3
+    const target : number = parseInt(process.argv[2]);
+    const numbers: number[] = [];
+    let i = 3;
     
     while (i < process.argv.length) {
-        numbers.push(parseFloat(process.argv[i]))
-        i++
+        numbers.push(parseFloat(process.argv[i]));
+        i++;
     }
 
     console.log(calculateExercises(numbers, target));
 
 } catch (e) {
-    console.log('Error, something bad happened, message: ', e.message);
+    console.log('Error, something bad happened, message: ', e);
 }
